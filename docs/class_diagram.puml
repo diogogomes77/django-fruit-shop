@@ -1,0 +1,92 @@
+@startuml
+
+package "Users" #DDDDDD {
+    class "User" as user
+    class "Web customer" as wc
+    class "Registered customer" as rc
+    class "New customer" as nc
+    class "Admin" as admin
+    user <|-- admin
+    user <|-- wc
+    wc <|-- nc
+    wc <|-- rc
+}
+
+package Products {
+    abstract class Product {
+        CharField name
+        DecimalField weight
+        DecimalField volume
+        DecimalField price
+        PositiveSmallIntegerField stock_quantity
+        Product get_product() # decrement stock_quantity
+    }
+    class Fruit extends Product {
+        FruitCategory category
+    }
+    class FruitCategory {
+        CharField name
+        List fruits
+    }
+    Fruit "0..n" --o "1" FruitCategory
+}
+
+package Sells {
+    class ShoppingCart {
+        User customer
+        List items
+        DecimalField cart_total
+        DateTime created_at
+        DateTime updated_at
+    }
+    ShoppingCart "0..n" --* "1" wc
+    class CartItem {
+        Product item
+        PositiveSmallIntegerField quantity
+
+        Product add_item() # item.get_product()
+        DecimalField get_items_cost()
+        DecimalField get_items_weight()
+        DecimalField get_items_volume()
+    }
+    class Order {
+        ShoppingCart cart
+        Shipping shipping
+        Payment payment
+        DecimalField order_cost
+    }
+    abstract class Payment {
+        Choices status
+    }
+    class Paypal extends Payment {
+    }
+    class CashOnDelivery extends Payment {
+    }
+    class BankTransfer extends Payment {
+    }
+    abstract class Shipping {
+        DecimalField weight
+        DecimalField volume
+        DecimalField shipping_total
+    }
+    class PickUpAtStore extends Shipping{
+    }
+    class PickUpAtMeetingPoint extends Shipping{
+        DecimalField distance
+    }
+    class Postage extends Shipping{
+        TextField delivery_address
+    }
+
+
+
+  ShoppingCart "1" *-- "0..n" CartItem
+  Order "1" *-- "1" ShoppingCart
+  Order "1" *-- "1" Payment
+  Order "1" *-- "1" Shipping
+
+  CartItem "0..n" --* "1" Product
+
+}
+
+@enduml
