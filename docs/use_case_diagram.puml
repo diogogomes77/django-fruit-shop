@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+
+actor "Web customer" as wc
+actor "Registered customer" as rc
+actor "New customer" as nc
+actor "Admin" as admin
+
+wc <|-- rc
+wc <|-- nc
+
+package Products {
+    usecase "Add items" as add_items
+    usecase "View items" as view_items
+}
+
+package Sells {
+    usecase "Make Purchase" as make_purchase
+    usecase "View Purchases" as view_purchases
+}
+
+package Users {
+    usecase "Register customer" as register_customer
+    usecase "View customers" as view_customers
+}
+
+rc --> view_items
+rc --> make_purchase
+nc --> register_customer
+nc --> view_items
+
+add_items <-- admin
+view_customers <-- admin
+view_purchases <-- admin
+
+@enduml
