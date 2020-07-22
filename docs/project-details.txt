@@ -1,0 +1,21 @@
+Fruit shop needs a platform to manage their products and sells.
+This platform should contain a place to manage products another one for sells and should require a login to use it.
+Requirements:
+- django admin resources are not allowed
+- virtualenv
+- python3.6
+- django1.11 or django2
+- Pages (as templates):
+--- login
+--- CRUD for products
+--- CRUD for sells
+--- must exist a logout button somewhere
+- at least three apps (products, sells, users)
+- mandatory to use javascript or jquery
+- all CRUDs should be handle through an API (can be in the apps or have a app just for that)
+- all create and update and delete calls should be executed through javascript (ajax ...)
+- unit/functional tests for each app (can be something simple like call an API and check response status)
+- the project should have a normal folder structure (docs, src, tests, requirments.txt)
+- documentation is mandatory (even if short) and should at least contain information on how to run project and tests
+- it can be delivered via git
+
