@@ -18,6 +18,7 @@ package Products {
         DecimalField weight
         DecimalField volume
         DecimalField price
+        PositiveSmallIntegerField sku
         PositiveSmallIntegerField stock_quantity
         Product get_product() # decrement stock_quantity
     }
@@ -55,6 +56,14 @@ package Sells {
         Payment payment
         DecimalField order_cost
     }
+    class OrderItem {
+        Order order
+        Product product
+        PositiveSmallIntegerField sku
+        DecimalField price
+        PositiveSmallIntegerField quantity
+        DecimalField get_cost()
+    }
     abstract class Payment {
         Choices status
     }
@@ -84,6 +93,7 @@ package Sells {
   Order "1" *-- "1" ShoppingCart
   Order "1" *-- "1" Payment
   Order "1" *-- "1" Shipping
+  Order "1" *-- "1..n" OrderItem
 
   CartItem "0..n" --* "1" Product
 
