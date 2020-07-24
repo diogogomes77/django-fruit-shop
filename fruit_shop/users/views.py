@@ -1,16 +1,32 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+from django.http import HttpResponseForbidden
+from django.shortcuts import render
+from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.views.generic import FormView
 
 from users.forms import ShopUserCreationForm
 
 
-class SignUp(generic.CreateView):
+class VisitorsOnly(FormView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseForbidden(render(request, "403.html"))
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseForbidden(reverse("403.html"))
+        return super().post(request, *args, **kwargs)
+
+
+class SignUp(VisitorsOnly, generic.CreateView):
     form_class = ShopUserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
 
-class Login(LoginView):
+class Login(VisitorsOnly, LoginView):
     template_name = 'login.html'
 

@@ -10,7 +10,7 @@ class UserLoginTest(TestCase):
         self.credentials = {
             'username': 'testuser',
             'password': 'secret'}
-        ShopUser.objects.create_user(**self.credentials)
+        self.user = ShopUser.objects.create_user(**self.credentials)
 
     def test_login_success(self):
         response = self.client.post(
@@ -19,6 +19,7 @@ class UserLoginTest(TestCase):
             follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertTrue(response.context['user'].is_active)
+        self.assertRedirects(response, reverse_lazy('home'))
 
     def test_login_fail(self):
         bad_credentials = {
@@ -35,6 +36,12 @@ class UserLoginTest(TestCase):
         self.test_login_success()
         response = self.client.get(reverse_lazy('logout'))
         self.assertFalse(response.context['user'].is_active)
+
+    def test_user_creation_after_login_fail(self):
+        #  an logged user should not access user registration
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('signup'))
+        self.assertEqual(403, response.status_code)
 
 
 class UserCreationTest(TestCase):
@@ -79,3 +86,6 @@ class UserCreationTest(TestCase):
         self.assertEquals(response.status_code, 200)
         users_qs = ShopUser.objects.filter(username=self.credentials['username'])
         self.assertEqual(len(users_qs), 0)
+
+
+        
