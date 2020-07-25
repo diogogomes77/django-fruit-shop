@@ -1,12 +1,17 @@
 To do:
-
-- [ ] template menu admin
-- [ ] template menu customer
-- [ ] template bootstrap
-
+- [x] template bootstrap
 - [x] tests user creation
 - [x] tests user login
 
- 
+- [x] admin add products
+- [x] admin list products
+- [x] admin edit products
+- [x] template menu admin
+- [x] admin permissions
+
+- [x] customer list products
+- [ ] customer add to cart products
+- [ ] template menu customer
+- [ ] customer permissions
 ~~~~ 
 ``

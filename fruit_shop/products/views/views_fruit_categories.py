@@ -1,8 +1,8 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
 from products.models import FruitCategory
+from products.views.views_utils import StaffOnly
 
 
 class FruitCategoryList(generic.ListView):
@@ -10,13 +10,13 @@ class FruitCategoryList(generic.ListView):
     fields = '__all__'
 
 
-class FruitCategoryCreate(generic.CreateView):
+class FruitCategoryCreate(StaffOnly, generic.CreateView):
     model = FruitCategory
     fields = '__all__'
     success_url = reverse_lazy('fruit_category-list')
 
 
-class FruitCategoryUpdate(generic.UpdateView):
+class FruitCategoryUpdate(StaffOnly, generic.UpdateView):
     model = FruitCategory
     fields = '__all__'
     success_url = reverse_lazy('fruit_category-list')
@@ -27,6 +27,6 @@ class FruitCategoryUpdate(generic.UpdateView):
         return context
 
 
-class FruitCategoryDelete(generic.DeleteView):
+class FruitCategoryDelete(StaffOnly, generic.DeleteView):
     model = FruitCategory
     success_url = reverse_lazy('fruit_category-list')

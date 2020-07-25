@@ -12,6 +12,7 @@ wc <|-- nc
 package Products {
     usecase "Add items" as add_items
     usecase "View items" as view_items
+    usecase "Add categories" as add_categories
 }
 
 package Sells {
@@ -32,5 +33,7 @@ nc --> view_items
 add_items <-- admin
 view_customers <-- admin
 view_purchases <-- admin
+
+add_items .> add_categories : include
 
 @enduml
