@@ -30,6 +30,11 @@
                 {% if user.is_authenticated %}
                     <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'logout' %}?next=/">Log Out</a>
                     </li>
+                    {% if user.is_staff %}
+                        <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-list' %}">List fruit categories</a>
+                        <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-add' %}">Add fruit category</a>
+                    </li>
+                    {% endif %}
                 {% else %}
                     <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'login' %}">Log In</a>
                     </li>

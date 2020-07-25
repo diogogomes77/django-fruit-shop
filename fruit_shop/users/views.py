@@ -12,12 +12,12 @@ from users.forms import ShopUserCreationForm
 class VisitorsOnly(FormView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseForbidden(render(request, "403.html"))
+            return HttpResponseForbidden(render(request, "shop/403.html"))
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseForbidden(reverse("403.html"))
+            return HttpResponseForbidden(reverse("shop/403.html"))
         return super().post(request, *args, **kwargs)
 
 

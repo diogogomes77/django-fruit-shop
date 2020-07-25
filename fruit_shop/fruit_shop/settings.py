@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'shop',
     'users',
     'products'
 ]
@@ -128,5 +129,3 @@ AUTH_USER_MODEL = 'users.ShopUser'
 LOGIN_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-print('STATIC_URL= ' + str(BASE_DIR)+STATIC_URL)
