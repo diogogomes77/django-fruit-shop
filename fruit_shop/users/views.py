@@ -24,9 +24,9 @@ class VisitorsOnly(FormView):
 class SignUp(VisitorsOnly, generic.CreateView):
     form_class = ShopUserCreationForm
     success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    template_name = 'users/signup.html'
 
 
 class Login(VisitorsOnly, LoginView):
-    template_name = 'login.html'
+    template_name = 'users/login.html'
 
