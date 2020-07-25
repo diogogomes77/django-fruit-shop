@@ -19,6 +19,7 @@ class FruitCategoryCreate(generic.CreateView):
 class FruitCategoryUpdate(generic.UpdateView):
     model = FruitCategory
     fields = '__all__'
+    success_url = reverse_lazy('fruit_category-list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

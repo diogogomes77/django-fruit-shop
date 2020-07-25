@@ -4,6 +4,7 @@ from django.db import models
 class Product(models.Model):
     """
     Product is the abstract class for every product type
+    this makes it possible to extend the product range in the future
     """
     name = models.CharField(max_length=100)
     sku = models.PositiveIntegerField()
@@ -14,6 +15,9 @@ class Product(models.Model):
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Fruit(Product):
@@ -28,3 +32,6 @@ class FruitCategory(models.Model):
     FruitCategory is the category where each fruit belongs
     """
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.name)
