@@ -28,7 +28,7 @@
             {% block leftmenu %}
 
                 {% if user.is_authenticated %}
-                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'logout' %}">Log Out</a>
+                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'logout' %}?next=/">Log Out</a>
                     </li>
                 {% else %}
                     <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'login' %}">Log In</a>
