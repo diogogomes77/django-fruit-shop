@@ -13,5 +13,10 @@ To do:
 - [ ] customer add to cart products
 - [ ] template menu customer
 - [ ] customer permissions
+
+- [x] temporary rest framework
+- [x] jquery rest client
+
+- [ ] custom rest views+serializers
 ~~~~ 
 ``

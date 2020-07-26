@@ -41,6 +41,7 @@
                     <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'signup' %}">Sign Up</a></li>
                 {% endif %}
 
+                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-rest' %}">Fruit rest</a></li>
                 <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-list' %}">List fruits</a></li>
                 <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-list' %}">List fruit categories</a></li>
 
@@ -97,6 +98,8 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/jquery.miranda.min.js' %}"></script>
+<script src="{% static 'vendor/jquery.rest.min.js' %}"></script>
 
 <!-- Menu Toggle Script -->
 <script>
@@ -105,6 +108,9 @@
         $("#wrapper").toggleClass("toggled");
     });
 </script>
+
+{% block appscripts %}
+{% endblock %}
 
 </body>
 </html>

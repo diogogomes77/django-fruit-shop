@@ -18,11 +18,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from products.api import ApiFruitList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('products/', include('products.urls')),
+
+    path('api/products/', ApiFruitList.as_view(), name='fruit-api-list'),
+
     path('', include('shop.urls')),
 
 
