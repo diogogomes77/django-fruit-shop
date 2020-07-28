@@ -18,3 +18,5 @@ urlpatterns = [
     path('/fruit-categories/<int:pk>/', FruitCategoryUpdate.as_view(), name='fruit_category-update'),
     path('/fruit-categories/<int:pk>/delete/', FruitCategoryDelete.as_view(), name='fruit_category-delete'),
 ]
+
+
