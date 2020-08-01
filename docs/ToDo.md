@@ -18,7 +18,7 @@ To do:
 - [x] jquery rest client
 
 - [x] custom rest product list view + serializer
-- [ ] custom rest product add view
+- [x] custom rest product add view
 - [ ] add to shopping cart using rest
 ~~~~ 
 ``

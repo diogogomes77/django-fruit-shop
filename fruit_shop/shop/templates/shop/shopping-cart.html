@@ -1,0 +1,22 @@
+<ul class="dropdown-menu dropdown-cart" role="menu">
+    <div id="cartItems" style="display: none;">
+        <div class="row">
+            <li>
+                <span class="item">
+                    <span class="item-left">
+                        <img src="http://lorempixel.com/50/50/" alt=""/>
+                        <span class="item-info">
+                            <span>[[name]]</span>
+                            <span>€ [[price]]</span>
+                        </span>
+                    </span>
+                    <span class="item-right">
+                        <button class="btn btn-xs btn-danger pull-right">x</button>
+                    </span>
+                </span>
+            </li>
+        </div>
+    </div>
+    <li class="divider"></li>
+    <li><a class="text-center" href="{% url 'user-carts-rest' %}">View Cart</a></li>
+</ul>

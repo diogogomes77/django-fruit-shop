@@ -58,7 +58,7 @@ package Sells {
     }
     class OrderItem {
         Order order
-        Product product
+        CharField product
         PositiveSmallIntegerField sku
         DecimalField price
         PositiveSmallIntegerField quantity

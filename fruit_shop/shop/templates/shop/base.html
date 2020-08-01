@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+    <link href="{% static 'css/cart-dropdown.css' %}" rel="stylesheet">
 
 </head>
 
@@ -28,22 +29,34 @@
             {% block leftmenu %}
 
                 {% if user.is_authenticated %}
-                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'logout' %}?next=/">Log Out</a></li>
+                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'logout' %}?next=/">Log
+                        Out</a></li>
 
                     {% if user.is_staff %}
-                        <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-add' %}">Add fruit category</a></li>
-                        <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-add' %}">Add fruit</a></li>
+                        <li><a class="list-group-item list-group-item-action bg-light"
+                               href="{% url 'fruit_category-add' %}">Add fruit category</a></li>
+                        <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-add' %}">Add
+                            fruit</a></li>
+
+                        <li><a class="list-group-item list-group-item-action bg-light"
+                               href="{% url 'user-carts-rest' %}">User Carts rest</a></li>
+
                     {% endif %}
 
 
                 {% else %}
-                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'login' %}">Log In</a></li>
-                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'signup' %}">Sign Up</a></li>
+                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
                 {% endif %}
 
-                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-rest' %}">Fruit rest</a></li>
-                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-list' %}">List fruits</a></li>
-                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-list' %}">List fruit categories</a></li>
+                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-rest' %}">Fruit
+                    rest</a></li>
+                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit-list' %}">List
+                    fruits</a></li>
+                <li><a class="list-group-item list-group-item-action bg-light" href="{% url 'fruit_category-list' %}">List
+                    fruit categories</a></li>
 
             {% endblock %}
         </div>
@@ -62,11 +75,28 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                    {% block navbar %}
-                        <li><a class="navbar-brand" href="{% url 'home' %}">HOME</a></li>
-                    {% endblock %}
+
+                        <li><a class="navbar-brand" href="{% url 'order-list' %}">Orders</a></li>
+                        <li style="min-width: 300px">
+                            <!-- #shopping-cart -->
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                       aria-expanded="false"> <span
+                                            class="glyphicon glyphicon-shopping-cart"></span>
+                                        <button class="btn btn-primary" id="cart-toggle">Cart</button>
+                                        <span class="caret"></span></a>
+                                        {% include "shop/shopping-cart.html" %}
+                                </li>
+                            </ul>
+                            <!-- /#shopping-cart -->
+                        </li>
+
                 </ul>
+
             </div>
+
+
         </nav>
 
 

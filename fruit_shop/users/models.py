@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import User, AbstractUser
 
+from sells.models import ShoppingCart
+
 
 class ShopUserManager(BaseUserManager):
     use_in_migrations = True
@@ -41,4 +43,14 @@ class ShopUser(AbstractUser):
 
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+
+    def get_mycart(self):
+        carts = self.carts.filter(order__isnull=True)
+        if carts.count() == 0:
+            cart = ShoppingCart.objects.create(
+                user=self
+            )
+            return cart
+        else:
+            return carts.order_by('-created_at').prefetch_related('items').first()
 

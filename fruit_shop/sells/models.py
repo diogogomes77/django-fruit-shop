@@ -11,6 +11,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey('ShoppingCart', on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
 
+
 class ShoppingCart(models.Model):
     """
         This is the Shopping cart where users will be adding products,
