@@ -52,5 +52,5 @@ class ShopUser(AbstractUser):
             )
             return cart
         else:
-            return carts.order_by('-created_at').prefetch_related('items').first()
+            return carts.order_by('-created_at').first()
 

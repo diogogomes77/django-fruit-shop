@@ -96,6 +96,23 @@ class ApiCartItemCreate(generic.CreateView):
         return None
 
 
+class ApiCartItemDelete(generic.DeleteView):
+    model = CartItem
+    fields = '__all__'
+
+    def delete(self, request, *args, **kwargs):
+        print(str(kwargs))
+        #self.object = CartItem.objects.get(pk=kwargs['id'])
+        #print(str(self.object))
+        return super().delete(request, *args, **kwargs)
+        return reverse_lazy('mycart')
+
+    def get_success_url(self):
+        print('get_success_url')
+        #return reverse_lazy('cart-api-list')
+        return reverse_lazy('mycart')
+
+
 class ApiMyCart(View):
 
     def get(self, request, *args, **kwargs):
@@ -106,7 +123,6 @@ class ApiMyCart(View):
             for item in data['items']:
                 items.append(model_to_dict(item))
             data['items'] = items
-            print('data= ' + str(data))
             return JsonResponse(data, safe=False)
 
 
@@ -126,7 +142,8 @@ class ApiCartItems(View):
         return view(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+        view = ApiCartItemDelete.as_view()
+        return view(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)

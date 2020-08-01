@@ -10,7 +10,7 @@ To do:
 - [x] admin permissions
 
 - [x] customer list products
-- [ ] customer add to cart products
+- [x] customer add to cart products
 - [ ] template menu customer
 - [ ] customer permissions
 
@@ -19,6 +19,7 @@ To do:
 
 - [x] custom rest product list view + serializer
 - [x] custom rest product add view
-- [ ] add to shopping cart using rest
+- [x] add to shopping cart using rest
+- [ ] delele cart item using rest
 ~~~~ 
 ``

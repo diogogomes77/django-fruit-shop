@@ -29,6 +29,12 @@ $(document).ready(function () {
             delay: 2000,
             nodeDelay: 1000
         });
+        $('button.deleteItem').click(function (e) {
+                e.preventDefault();
+                let el = $(this);
+                console.log(el.data('id'));
+                deleteItem(el.data('id'));
+            });
     }
 
     function RestloadCartItems() {
@@ -121,6 +127,17 @@ $(document).ready(function () {
             setMyCart(data);
         });
     }
+
+    function deleteItem(item_id) {
+
+        let deleteItem = restClient
+            .carts.items
+            .del(mycart['id'], item_id);
+        deleteItem.done(function (data, textStatus, xhrObject) {
+            setMyCart(data);
+        });
+    }
+
 
     function loadFruitDetail(id) {
         $.ajax({
