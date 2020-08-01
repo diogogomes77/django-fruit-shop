@@ -3,13 +3,14 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from products.views import FruitList, FruitCreate, FruitUpdate, FruitDelete, FruitCategoryList, FruitCategoryCreate, \
-    FruitCategoryUpdate, FruitCategoryDelete, FruitSinglePage, AjaxFruitForm
+    FruitCategoryUpdate, FruitCategoryDelete, FruitSinglePage, AjaxFruitForm, AjaxFruitList
 
 urlpatterns = [
     path('', FruitList.as_view(), name='fruit-list'),
     #path('rest/', TemplateView.as_view(template_name='products/fruit_list_rest.html'), name='fruit-rest'),
     path('rest/', FruitSinglePage.as_view(), name='fruit-rest'),
-    path('rest/ajax_get_form', AjaxFruitForm.as_view(), name='fruit-rest-form'),
+    path('rest/ajax_get_fruit_form', AjaxFruitForm.as_view(), name='fruit-rest-form'),
+    path('rest/ajax_get_fruit_list', AjaxFruitList.as_view(), name='fruit-rest-list'),
 
     path('add/', FruitCreate.as_view(), name='fruit-add'),
 

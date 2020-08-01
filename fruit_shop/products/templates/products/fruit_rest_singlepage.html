@@ -1,16 +1,9 @@
 {% extends "products/base_products.html" %}
 
 {% block content %}
-    <h2>Fruits</h2>
-    <div id="formFruit"></div>
     <button id="addFruit">Add Fruit</button>
-
-    <div id="fruits" style="display: none;">
-        <div class="row">
-            <div class="col-4">[[name]]</div>
-            <div class="col-4">[[price]]</div>
-            <div class="col-4">buy</div>
-        </div>
+    <button id="listFruit">Fruit List</button>
+    <div id="FruitContent">
     </div>
 
 {% endblock %}

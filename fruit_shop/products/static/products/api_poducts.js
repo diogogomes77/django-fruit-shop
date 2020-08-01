@@ -1,56 +1,69 @@
 $(document).ready(function() {
 
-    const client = new $.RestClient('/api/');
+    const restClient = new $.RestClient('/api/');
+    restClient.add('products');
 
-    client.add('products');
-
-    let getProducts = client.products.read();
-
-    getProducts.done(function (data, textStatus, xhrObject){
-      //alert('I have data: ' + data);
-      console.log(data);
-      $("#fruits").mirandajs(data);
-
-      $("#fruits").mirandajs(data, {
-                containers:['fruits'],
-                jsonNode:['fruits'],
-                effect: 'slideDown',
-                delay: 2000,
-                nodeDelay: 1000
-            });
+    $('#listFruit').click(function (e){
+        e.preventDefault();
+        loadFruitList();
     });
 
-    // OR simply:
-    //client.products.read().done(function (data){
-      //alert('I have data: ' + data);
-    //  console.log(data);
-    //});
-
     $('#addFruit').click(function (e) {
-        console.log("addFruit click");
         e.preventDefault();
+        loadFruitForm();
+    });
+
+
+    function loadFruitList(){
+        console.log("loadFruitList");
         $.ajax({
-            url: "/products/rest/ajax_get_form",
+            url: "/products/rest/ajax_get_fruit_list",
             type: "get",
             success: function(response) {
-              // response is form in html format
-              $("#formFruit").html(response);
-              $('#addFruit').toggle();
+              $("#FruitContent").html(response);
+              RestloadFruiList();
+            }
+        });
+    }
+
+    function RestloadFruiList(){
+        let getProducts = restClient.products.read();
+        getProducts.done(function (data, textStatus, xhrObject){
+          console.log(data);
+          $("#fruits").mirandajs(data);
+          $("#fruits").mirandajs(data, {
+                    containers:['fruits'],
+                    jsonNode:['fruits'],
+                    effect: 'slideDown',
+                    delay: 2000,
+                    nodeDelay: 1000
+                });
+        });
+    }
+
+
+    function loadFruitForm() {
+        $.ajax({
+            url: "/products/rest/ajax_get_fruit_form",
+            type: "get",
+            success: function(response) {
+              $("#FruitContent").html(response);
               $('#postProduct').click(function (e) {
-                    console.log("click");
                     e.preventDefault();
                     let data = getFormData($('#fruitForm'));
-                    //console.log(data);
-                    let createProduct = client.products.create(data, {});
-                    createProduct.done(function (data, textStatus, xhrObject){
-                        console.log(data);
-                        $("#formFruit").html(data);
-                    });
+                    RestCreateFruit(data);
+
                 })
             }
         })
+    }
 
-    });
+    function RestCreateFruit(data){
+        let createProduct = restClient.products.create(data, {});
+        createProduct.done(function (data, textStatus, xhrObject){
+            $("#formFruit").html(data);
+        });
+    }
 
     function getFormData($form){
         var unindexed_array = $form.serializeArray();
@@ -61,6 +74,11 @@ $(document).ready(function() {
         });
 
         return indexed_array;
+    }
+
+    function getFruitDetail(id){
+        console.log('fruit: ' + id);
+
     }
 
 

@@ -67,3 +67,10 @@ class AjaxFruitForm(AjaxGeneral):
         context = {'form': FruitForm()}
         template = 'products/ajax_rest_form_fruit.html'
         return render(request, template, context)
+
+
+class AjaxFruitList(AjaxGeneral):
+
+    def get(self, request, *args, **kwargs):
+        template = 'products/ajax_rest_list_fruit.html'
+        return render(request, template)
