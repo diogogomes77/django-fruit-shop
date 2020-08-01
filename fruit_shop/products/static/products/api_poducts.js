@@ -14,6 +14,7 @@ $(document).ready(function() {
     });
 
 
+
     function loadFruitList(){
         console.log("loadFruitList");
         $.ajax({
@@ -38,9 +39,39 @@ $(document).ready(function() {
                     delay: 2000,
                     nodeDelay: 1000
                 });
+          $('a.fruitDetail').click(function (e) {
+            e.preventDefault();
+            let el = $(this);
+            loadFruitDetail(el.data('id'))
+          });
         });
     }
 
+    function loadFruitDetail(id){
+        $.ajax({
+            url: "/products/rest/ajax_get_fruit_detail",
+            type: "get",
+            success: function(response) {
+              $("#FruitContent").html(response);
+              restLoadFruitDetail(id);
+            }
+        })
+    }
+
+    function restLoadFruitDetail(id){
+        let getProduct = restClient.products.read(id);
+        getProduct.done(function (data, textStatus, xhrObject){
+          console.log(data);
+          $("#fruit").mirandajs(data);
+          $("#fruit").mirandajs(data, {
+                    containers:['fruit'],
+                    jsonNode:['fruit'],
+                    effect: 'slideDown',
+                    delay: 2000,
+                    nodeDelay: 1000
+                });
+        });
+    }
 
     function loadFruitForm() {
         $.ajax({

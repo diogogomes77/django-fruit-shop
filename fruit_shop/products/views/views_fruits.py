@@ -74,3 +74,10 @@ class AjaxFruitList(AjaxGeneral):
     def get(self, request, *args, **kwargs):
         template = 'products/ajax_rest_list_fruit.html'
         return render(request, template)
+
+
+class AjaxFruitDetail(AjaxGeneral):
+
+    def get(self, request, *args, **kwargs):
+        template = 'products/ajax_rest_detail_fruit.html'
+        return render(request, template)

@@ -1,3 +1,4 @@
+from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View, generic
@@ -34,11 +35,13 @@ class ApiFruitList(generic.ListView):
 
 
 class ApiFruiDetail(generic.DetailView):
+    model = Fruit
+    fields = '__all__'
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        return JsonResponse(context, safe=False)
+        fruit = Fruit.objects.get(pk=kwargs['id'])
+        data = model_to_dict(fruit)
+        return JsonResponse(data, safe=False)
 
 
 class ApiFruitCreate(generic.CreateView):
@@ -58,10 +61,11 @@ class ApiFruitCreate(generic.CreateView):
 class ApiFruit(View):
 
     def get(self, request, *args, **kwargs):
-        if True:
-            view = ApiFruitList.as_view()
-        else:
+
+        if len(kwargs) > 0:
             view = ApiFruiDetail.as_view()
+        else:
+            view = ApiFruitList.as_view()
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
