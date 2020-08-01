@@ -17,6 +17,8 @@ To do:
 - [x] temporary rest framework
 - [x] jquery rest client
 
-- [ ] custom rest views+serializers
+- [x] custom rest product list view + serializer
+- [ ] custom rest product add view
+- [ ] add to shopping cart using rest
 ~~~~ 
 ``

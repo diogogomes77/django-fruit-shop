@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('products/', include('products.urls')),
-    path('api/products/', include('products.urls-api')),
+    path('api/products/', include('products.urls-rest')),
+    path('api2/products/', include('products.urls-drf')),
 
 
 

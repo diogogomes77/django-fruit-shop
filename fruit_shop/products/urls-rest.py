@@ -1,8 +1,9 @@
 from django.urls import path
-from products.api import ApiFruitList
+
+from products.views import ApiFruit
 
 urlpatterns = [
-    path('', ApiFruitList.as_view(), name='fruit-api-list'),
+    path('', ApiFruit.as_view(), name='fruit-api'),
     # path('api/products/', RestApiFruit.as_view(), name='fruit-api-list'),
 ]
 
