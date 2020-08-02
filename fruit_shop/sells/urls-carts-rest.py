@@ -7,6 +7,6 @@ urlpatterns = [
     path('<int>/', ApiCart.as_view(), name='cart-api-details'),
     path('<int:id>/items/', include([
         path('', ApiCartItems.as_view(), name='cart-api-items-list'),
-        path('<int:id>/', ApiCartItems.as_view(), name='cart-api-items-details'),
+        path('<int:item_id>/', ApiCartItems.as_view(), name='cart-api-items-details'),
     ])),
 ]

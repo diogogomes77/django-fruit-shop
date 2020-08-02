@@ -134,6 +134,7 @@ $(document).ready(function () {
             .carts.items
             .del(mycart['id'], item_id);
         deleteItem.done(function (data, textStatus, xhrObject) {
+            console.log(data);
             setMyCart(data);
         });
     }

@@ -1,10 +1,16 @@
+import json
+
 from django.core import serializers
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View, generic
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import BaseDeleteView, DeletionMixin
 
+from products.models import Fruit
 from sells.models import ShoppingCart, CartItem
+from users.models import ShopUser
 
 
 class ApiCartList(generic.ListView):
@@ -88,29 +94,35 @@ class ApiCartItemCreate(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         self.object = None
-        return super().post(request, *args, **kwargs)
-
-    def get_success_url(self):
-        print('get_success_url')
-        #return reverse_lazy('cart-api-list')
-        return None
+        cart = ShoppingCart.objects.get(id=int(request.POST['cart']))
+        product = Fruit.objects.get(id=int(request.POST['product']))
+        quantity = int(request.POST['quantity'])
+        added = cart.add_cart_item(product, quantity)
+        cart_items = cart.get_cart_items()
+        if added:
+            status = 201
+        else:
+            status = 409
+        return JsonResponse(cart_items, safe=False, status=status)
 
 
 class ApiCartItemDelete(generic.DeleteView):
     model = CartItem
-    fields = '__all__'
+    pk_url_kwarg = 'item_id'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        cart_item = CartItem.objects.get(pk=pk)
+        user = ShopUser.objects.get(pk=self.request.user.id)
+        if cart_item.cart.user.id != user.id:
+            raise HttpResponse(status=401)
+        self.cart = cart_item.cart
+        return cart_item
 
     def delete(self, request, *args, **kwargs):
-        print(str(kwargs))
-        #self.object = CartItem.objects.get(pk=kwargs['id'])
-        #print(str(self.object))
-        return super().delete(request, *args, **kwargs)
-        return reverse_lazy('mycart')
-
-    def get_success_url(self):
-        print('get_success_url')
-        #return reverse_lazy('cart-api-list')
-        return reverse_lazy('mycart')
+        self.get_object().delete()
+        cart_items = self.cart.get_cart_items()
+        return JsonResponse(cart_items, safe=False, status=204)
 
 
 class ApiMyCart(View):
@@ -118,12 +130,8 @@ class ApiMyCart(View):
     def get(self, request, *args, **kwargs):
         if request.user:
             cart = request.user.get_mycart()
-            data = model_to_dict(cart)
-            items = []
-            for item in data['items']:
-                items.append(model_to_dict(item))
-            data['items'] = items
-            return JsonResponse(data, safe=False)
+            cart_items = cart.get_cart_items()
+            return JsonResponse(cart_items, safe=False)
 
 
 class ApiCartItems(View):

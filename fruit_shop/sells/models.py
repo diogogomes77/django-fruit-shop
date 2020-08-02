@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import model_to_dict
 
 
 class CartItem(models.Model):
@@ -29,6 +30,48 @@ class ShoppingCart(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_cart_items(self):
+        """
+        :return: a dict of the cart items to be used by Ajax
+        """
+        cart_items = self.items.through.objects.select_related('product').all()
+        dict_cart = model_to_dict(self)
+        items = []
+        for item in cart_items:
+            dict_item = model_to_dict(item)
+            dict_item['product_id'] = item.product.id
+            dict_item['name'] = item.product.name
+            dict_item['price'] = item.product.price
+            items.append(dict_item)
+        dict_cart['items'] = items
+        return dict_cart
+
+    def add_cart_item(self, product, quantity=1):
+        """
+        :param quantity: Quantity of product
+        :param product: The product to be added to the cart. It's stock_quantity is checked and updated
+        :return: True if item was added. False if not
+        """
+        if product.stock_quantity < quantity:
+            return False
+        item = self.items.through.objects.get(product_id=product.id)
+        if item:
+            item.quantity += quantity
+            item.save()
+        else:
+            self.items.through.objects.create(
+                cart=self,
+                product=product,
+                quantity=quantity
+            )
+        product.stock_quantity -= quantity
+        product.save()
+        return True
+
+    def del_cart_item(self, product):
+        pass
+
 
 
 class OrderItem(models.Model):
