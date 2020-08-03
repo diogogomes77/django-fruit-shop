@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms import model_to_dict
 
@@ -55,7 +56,11 @@ class ShoppingCart(models.Model):
         """
         if product.stock_quantity < quantity:
             return False
-        item = self.items.through.objects.get(product_id=product.id)
+        try:
+            item = self.items.through.objects.get(product_id=product.id)
+        except ObjectDoesNotExist:
+            item = None
+        print(str(item))
         if item:
             item.quantity += quantity
             item.save()

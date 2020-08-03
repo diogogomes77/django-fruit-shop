@@ -12,23 +12,26 @@ $(document).ready(function () {
     GetMyCart();
 
     function GetMyCart() {
-        let mycart = restClient.carts.read('mycart');
-        mycart.done(function (data, textStatus, xhrObject) {
+        console.log('GetMyCart');
+        let cart = restClient.carts.read('mycart');
+        cart.done(function (data, textStatus, xhrObject) {
             console.log(data);
             setMyCart(data);
         });
     }
 
     function setMyCart(cart){
+        console.log('setMyCart');
+        console.log(cart);
         mycart = cart;
         $("#cartItems").mirandajs(cart['items']);
-        $("#cartItems").mirandajs(cart['items'], {
+        /*$("#cartItems").mirandajs(cart['items'], {
             containers: ['cartItems'],
             jsonNode: ['cartItems'],
             effect: 'slideDown',
             delay: 2000,
             nodeDelay: 1000
-        });
+        });*/
         $('button.deleteItem').click(function (e) {
                 e.preventDefault();
                 let el = $(this);
@@ -81,6 +84,7 @@ $(document).ready(function () {
             type: "get",
             success: function (response) {
                 $("#FruitContent").html(response);
+                console.log('salut david');
                 RestloadFruiList();
 
             }
@@ -115,6 +119,7 @@ $(document).ready(function () {
     }
 
     function RestAddToCart(product_id) {
+        console.log('RestAddToCart');
         data = {
             'cart': mycart['id'],
             'product': product_id,
@@ -124,12 +129,13 @@ $(document).ready(function () {
             .carts.items
             .create(mycart['id'], data, {});
         addItem.done(function (data, textStatus, xhrObject) {
+            console.log(data);
             setMyCart(data);
         });
     }
 
     function deleteItem(item_id) {
-
+        console.log('deleteItem cart: ' + mycart['id'] + " item:" + item_id);
         let deleteItem = restClient
             .carts.items
             .del(mycart['id'], item_id);

@@ -2,26 +2,7 @@ from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View, generic
-from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.core import serializers as core_serializers
-
 from products.models import Fruit
-
-
-class FruitSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Fruit
-        fields = '__all__'
-
-
-class DrfFruitList(APIView):
-
-    def get(self, request):
-        fruits = Fruit.objects.all()
-        serialized = FruitSerializer(fruits, many=True)
-        return Response(serialized.data)
 
 
 class ApiFruitList(generic.ListView):

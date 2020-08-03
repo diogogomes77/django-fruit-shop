@@ -8,6 +8,8 @@
     <meta name="description" content="Fruit Shop">
     <meta name="author" content="Diogo Gomes">
 
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
     <title>Fruit Shop</title>
 
     <!-- Bootstrap core CSS -->
@@ -138,7 +140,7 @@
         $("#wrapper").toggleClass("toggled");
     });
 </script>
-
+<script src="{% static 'products/api_poducts.js' %}"></script>
 {% block appscripts %}
 {% endblock %}
 

@@ -99,6 +99,7 @@ class ApiCartItemCreate(generic.CreateView):
         quantity = int(request.POST['quantity'])
         added = cart.add_cart_item(product, quantity)
         cart_items = cart.get_cart_items()
+        print('cart_items: ' + str(cart_items))
         if added:
             status = 201
         else:
@@ -114,47 +115,81 @@ class ApiCartItemDelete(generic.DeleteView):
         pk = self.kwargs.get(self.pk_url_kwarg)
         cart_item = CartItem.objects.get(pk=pk)
         user = ShopUser.objects.get(pk=self.request.user.id)
-        if cart_item.cart.user.id != user.id:
+        if cart_item.cart.user.id != self.request.user.id:
             raise HttpResponse(status=401)
         self.cart = cart_item.cart
         return cart_item
 
     def delete(self, request, *args, **kwargs):
         self.get_object().delete()
-        cart_items = self.cart.get_cart_items()
+        cart = request.user.get_mycart()
+        cart_items = cart.get_cart_items()
+        print('cart_items: ' + str(cart_items))
         return JsonResponse(cart_items, safe=False, status=204)
 
 
-class ApiMyCart(View):
-
-    def get(self, request, *args, **kwargs):
-        if request.user:
-            cart = request.user.get_mycart()
-            cart_items = cart.get_cart_items()
-            return JsonResponse(cart_items, safe=False)
-
-
 class ApiCartItems(View):
+    pk_url_kwarg = 'item_id'
 
     def get(self, request, *args, **kwargs):
-
         if len(kwargs) > 0:
-            view = ApiCartItemDetail.as_view()
+            cart_item = CartItem.objects.get(pk=kwargs['id'])
+            if cart_item.cart.user.id != self.request.user.id:
+                raise HttpResponse(status=401)
+            data = model_to_dict(cart_item)
+            return JsonResponse(data, safe=False)
         else:
-            view = ApiCartItemsList.as_view()
-        return view(request, *args, **kwargs)
+            items = CartItem.objects.all().values('product', 'quantity')
+            data = list(items)
+            return JsonResponse(data, safe=False)
 
     def post(self, request, *args, **kwargs):
-        print('ApiCartItems post')
-        view = ApiCartItemCreate.as_view()
-        return view(request, *args, **kwargs)
+        self.object = None
+        cart = ShoppingCart.objects.get(id=int(request.POST['cart']))
+        if cart.user.id != self.request.user.id:
+            raise HttpResponse(status=401)
+        product = Fruit.objects.get(id=int(request.POST['product']))
+        quantity = int(request.POST['quantity'])
+        added = cart.add_cart_item(product, quantity)
+        if added:
+            status = 201
+        else:
+            status = 409
+        return JsonResponse(self._cart_items(request), safe=False, status=status)
 
     def delete(self, request, *args, **kwargs):
-        view = ApiCartItemDelete.as_view()
-        return view(request, *args, **kwargs)
+        print('delete')
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        cart_item = CartItem.objects.get(pk=pk)
+        if cart_item.cart.user.id != self.request.user.id:
+            raise HttpResponse(status=401)
+        cart_item.delete()
+        cart = request.user.get_mycart()
+        cart_items = cart.get_cart_items()
+        print(str(cart_items))
+        return JsonResponse(cart_items, safe=False, status=200)
 
     def put(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
+
+    #def dispatch(self, request, *args, **kwargs):
+    #    return self.dispatch(request, *args, **kwargs)
+
+    def _cart_items(self, request):
+        cart = request.user.get_mycart()
+        cart_items = cart.get_cart_items()
+        print('cart_items: ' + str(cart_items))
+        return cart_items
+
+
+class ApiMyCart(ApiCartItems):
+
+    def get(self, request, *args, **kwargs):
+        if request.user:
+            cart_items = self._cart_items(request)
+            return JsonResponse(cart_items, safe=False, status=200)
+        else:
+            raise HttpResponse(status=401)
