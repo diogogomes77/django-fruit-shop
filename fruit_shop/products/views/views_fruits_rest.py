@@ -2,63 +2,65 @@ from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View, generic
+
+from products.forms import FruitForm
 from products.models import Fruit
-
-
-class ApiFruitList(generic.ListView):
-
-    def get(self, request, *args, **kwargs):
-        fruits = Fruit.objects.all().values('id', 'name', 'price')
-        data = list(fruits)
-        # data = core_serializers.serialize("json", fruits)
-        return JsonResponse(data, safe=False)
-        # return HttpResponse(data, content_type='application/json')
-
-
-class ApiFruiDetail(generic.DetailView):
-    model = Fruit
-    fields = '__all__'
-
-    def get(self, request, *args, **kwargs):
-        fruit = Fruit.objects.get(pk=kwargs['id'])
-        data = model_to_dict(fruit)
-        return JsonResponse(data, safe=False)
-
-
-class ApiFruitCreate(generic.CreateView):
-    model = Fruit
-    fields = '__all__'
-
-    def post(self, request, *args, **kwargs):
-        print('post')
-        self.object = None
-        return super().post(request, *args, **kwargs)
-
-    def get_success_url(self):
-        print('get_success_url')
-        return reverse_lazy('fruit-api')
 
 
 class ApiFruit(View):
 
     def get(self, request, *args, **kwargs):
-
         if len(kwargs) > 0:
-            view = ApiFruiDetail.as_view()
+            fruit = Fruit.objects.get(pk=kwargs['id'])
+            if fruit:
+                data = model_to_dict(fruit)
+                return JsonResponse(data, safe=False, status=200)
+            else:
+                return JsonResponse(data={}, safe=False, status=404)
         else:
-            view = ApiFruitList.as_view()
-        return view(request, *args, **kwargs)
+            fruits = Fruit.objects.all().values('id', 'name', 'price')
+            data = list(fruits)
+            return JsonResponse(data, safe=False)
 
     def post(self, request, *args, **kwargs):
-
-        view = ApiFruitCreate.as_view()
-        return view(request, *args, **kwargs)
+        self.object = None
+        form = FruitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse(data={}, safe=False, status=201)
+        else:
+            return JsonResponse(data={'errors': dict(form.errors.items())}, safe=False, status=400)
 
     def delete(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+        print('delete')
+        if len(kwargs) > 0:
+            fruit = Fruit.objects.get(pk=kwargs['id'])
+            if fruit:
+                fruit.delete()
+                return JsonResponse(data={}, safe=False, status=204)
+            else:
+                return JsonResponse(data={}, safe=False, status=404)
+        else:
+            return JsonResponse(data={}, safe=False, status=400)
 
     def put(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+        print('put')
+        print(str(kwargs))
+        if len(kwargs) > 0:
+            fruit = Fruit.objects.get(pk=kwargs['id'])
+            print(str(fruit))
+            if fruit:
+                print(str(request.POST))
+                print(str(request.GET))
+                form = FruitForm(request.POST, instance=fruit)
+                if form.is_valid():
+                    form.save()
+                    return JsonResponse(data={}, safe=False, status=204)
+                return JsonResponse(data={'errors': dict(form.errors.items())}, safe=False, status=400)
+            else:
+                return JsonResponse(data={}, safe=False, status=404)
+        else:
+            return JsonResponse(data={}, safe=False, status=400)
 
     def patch(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)

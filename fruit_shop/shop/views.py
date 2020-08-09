@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+
+class ShopSinglePage(generic.TemplateView):
+    template_name = "shop/shop_rest_singlepage.html"

@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.models import AnonymousUser
 from django.core import serializers
 from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse
@@ -133,7 +134,8 @@ class ApiCartItems(View):
 
     def get(self, request, *args, **kwargs):
         if len(kwargs) > 0:
-            cart_item = CartItem.objects.get(pk=kwargs['id'])
+            cart_item = CartItem.objects.get\
+                (pk=kwargs['id'])
             if cart_item.cart.user.id != self.request.user.id:
                 raise HttpResponse(status=401)
             data = model_to_dict(cart_item)
@@ -175,8 +177,10 @@ class ApiCartItems(View):
     def patch(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
 
-    #def dispatch(self, request, *args, **kwargs):
-    #    return self.dispatch(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().dispatch(request, args, kwargs)
+        return JsonResponse(status=403, data={'message': "access forbidden"})
 
     def _cart_items(self, request):
         cart = request.user.get_mycart()
@@ -188,8 +192,8 @@ class ApiCartItems(View):
 class ApiMyCart(ApiCartItems):
 
     def get(self, request, *args, **kwargs):
-        if request.user:
-            cart_items = self._cart_items(request)
-            return JsonResponse(cart_items, safe=False, status=200)
-        else:
-            raise HttpResponse(status=401)
+        cart_items = self._cart_items(request)
+        return JsonResponse(cart_items, safe=False, status=200)
+
+
+

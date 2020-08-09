@@ -9,7 +9,11 @@ $(document).ready(function () {
 
     let mycart = null;
 
-    GetMyCart();
+    if (is_authenticated && !is_staff){
+        GetMyCart();
+    }
+
+    loadFruitList();
 
     function GetMyCart() {
         console.log('GetMyCart');
@@ -72,6 +76,7 @@ $(document).ready(function () {
         loadFruitList();
     });
 
+
     $('#addFruit').click(function (e) {
         e.preventDefault();
         loadFruitForm();
@@ -80,11 +85,10 @@ $(document).ready(function () {
     function loadFruitList() {
         console.log("loadFruitList");
         $.ajax({
-            url: "/products/rest/ajax_get_fruit_list",
+            url: "/products/ajax_get_fruit_list",
             type: "get",
             success: function (response) {
                 $("#FruitContent").html(response);
-                console.log('salut david');
                 RestloadFruiList();
 
             }
@@ -96,17 +100,27 @@ $(document).ready(function () {
         getProducts.done(function (data, textStatus, xhrObject) {
             console.log(data);
             $("#fruits").mirandajs(data);
-            $("#fruits").mirandajs(data, {
+            /*$("#fruits").mirandajs(data, {
                 containers: ['fruits'],
                 jsonNode: ['fruits'],
                 effect: 'slideDown',
                 delay: 2000,
                 nodeDelay: 1000
-            });
+            });*/
             $('a.fruitDetail').click(function (e) {
                 e.preventDefault();
                 let el = $(this);
                 loadFruitDetail(el.data('id'))
+            });
+            $('button.editFruit').click(function (e) {
+                e.preventDefault();
+                let el = $(this);
+                editFruit(el.data('id'))
+            });
+            $('button.deleteFruit').click(function (e) {
+                e.preventDefault();
+                let el = $(this);
+                deleteFruit(el.data('id'))
             });
             $('button.addToCart').click(function (e) {
                 e.preventDefault();
@@ -148,7 +162,7 @@ $(document).ready(function () {
 
     function loadFruitDetail(id) {
         $.ajax({
-            url: "/products/rest/ajax_get_fruit_detail",
+            url: "/products/ajax_get_fruit_detail",
             type: "get",
             success: function (response) {
                 $("#FruitContent").html(response);
@@ -157,24 +171,60 @@ $(document).ready(function () {
         })
     }
 
+    function editFruit(id) {
+        $.ajax({
+            url: "/products/ajax_get_fruit_edit_form",
+            type: "get",
+            success: function (response) {
+                $("#FruitContent").html(response);
+                restLoadFruitEdit(id);
+
+            }
+        })
+    }
+    function restLoadFruitEdit(id) {
+        console.log('restLoadFruitEdit');
+        let getProduct = restClient.products.read(id);
+        getProduct.done(function (data, textStatus, xhrObject) {
+            console.log(data);
+            $("#fruit").mirandajs(data);
+            $('button.putProduct').click(function (e) {
+                e.preventDefault();
+                console.log('putProduct');
+                let el = $(this);
+                let data = getFormData($('#fruitForm'));
+                console.log(data);
+                restSaveFruitEdit(el.data('id'), data)
+            });
+        });
+    }
+
+    function restSaveFruitEdit(id, data) {
+        let putProduct = restClient.products.update(id, data);
+        putProduct.done(function (data, textStatus, xhrObject) {
+            console.log(data);
+            $("#fruit").mirandajs(data);
+            loadFruitList();
+        });
+    }
+
+    function deleteFruit(id) {
+        restClient.products.del(id);
+        loadFruitList();
+
+    }
+
     function restLoadFruitDetail(id) {
         let getProduct = restClient.products.read(id);
         getProduct.done(function (data, textStatus, xhrObject) {
             console.log(data);
             $("#fruit").mirandajs(data);
-            $("#fruit").mirandajs(data, {
-                containers: ['fruit'],
-                jsonNode: ['fruit'],
-                effect: 'slideDown',
-                delay: 2000,
-                nodeDelay: 1000
-            });
         });
     }
 
     function loadFruitForm() {
         $.ajax({
-            url: "/products/rest/ajax_get_fruit_form",
+            url: "/products/ajax_get_fruit_form",
             type: "get",
             success: function (response) {
                 $("#FruitContent").html(response);
@@ -188,10 +238,27 @@ $(document).ready(function () {
         })
     }
 
+    function loadFruitCategoryForm() {
+        $.ajax({
+            url: "/products/ajax_get_fruit_category_form",
+            type: "get",
+            success: function (response) {
+                $("#FruitContent").html(response);
+                $('#postProductCategory').click(function (e) {
+                    e.preventDefault();
+                    let data = getFormData($('#fruitCategoryForm'));
+                    RestCreateFruitCategory(data);
+
+                })
+            }
+        })
+    }
+
     function RestCreateFruit(data) {
         let createProduct = restClient.products.create(data, {});
         createProduct.done(function (data, textStatus, xhrObject) {
             $("#formFruit").html(data);
+            loadFruitList();
         });
     }
 

@@ -1,7 +1,6 @@
-
 from django.urls import path
-from django.views.generic import TemplateView
+from shop.views import ShopSinglePage
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='shop/home.html'), name='home'),
+    path('', ShopSinglePage.as_view(), name='home'),
 ]

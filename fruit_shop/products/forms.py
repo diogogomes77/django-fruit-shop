@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from products.models import Fruit
+from products.models import Fruit, FruitCategory
 
 
 class FruitForm(ModelForm):
@@ -14,4 +14,12 @@ class FruitForm(ModelForm):
             'volume_l',
             'price',
             'category',
+        ]
+
+
+class FruitCategoryForm(ModelForm):
+    class Meta:
+        model = FruitCategory
+        fields = [
+            'name',
         ]

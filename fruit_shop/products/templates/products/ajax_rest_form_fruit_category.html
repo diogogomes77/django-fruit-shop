@@ -1,5 +1,5 @@
-<h2>Add Fruit</h2>
-<form id="fruitForm">
+<h2>Add Fruit Category</h2>
+<form id="fruitCategoryForm">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
@@ -14,18 +14,15 @@
                 <th>{{ field.label_tag }}</th>
                 <td>
                     {{ field.errors }}
-                    {{ field.value|default_if_none:"" }}
                     {{ field }}
                     {{ field.help_text }}
                 </td>
             </tr>
         {% endfor %}
     </table>
-
-</div>
     {% if object %}
-        <button class="putProduct" type="button">Edit fruit</button>
+        <button id="putProductCategory" type="button">Edit fruit category</button>
     {% else %}
-        <button id="postProduct" type="button">Create fruit</button>
+        <button id="postProductCategory" type="button">Create fruit category</button>
     {% endif %}
 </form>

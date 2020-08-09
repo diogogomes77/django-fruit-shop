@@ -1,0 +1,42 @@
+<h2>Add Fruit</h2>
+<form id="fruitForm">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field.errors }}
+        {{ hidden_field }}
+    {% endfor %}
+
+    <div id="fruit" style="display: none;">
+    <div class="row">
+        <div class="col-4"><label for="id_name">name</label></div>
+        <div class="col-4"><input type="text" id="id_name" name="name" value="[[name]]"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"><label for="id_sku">sku</label></div>
+         <div class="col-4"><input type="text" id="id_sku" name="sku" value="[[sku]]"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"><label for="id_stock_quantity">stock_quantity</label></div>
+         <div class="col-4"><input type="text" id="id_stock_quantity" name="stock_quantity" value="[[stock_quantity]]"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"><label for="id_weight_kg">weight_kg</label></div>
+        <div class="col-4"><input type="text" id="id_weight_kg" name="weight_kg" value="[[weight_kg]]"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"><label for="id_volume_l">volume_l</label></div>
+         <div class="col-4"><input type="text" id="id_volume_l" name="volume_l" value="[[volume_l]]"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"><label for="id_category">category</label></div>
+         <div class="col-4"><input type="text" id="id_category" name="category" value="[[category]]"></div>
+    </div>
+    <div class="row">
+         <div class="col-4"><label for="id_price">price</label></div>
+        <div class="col-4"><input type="text" id="id_price" name="price" value="[[price]]"></div>
+    </div>
+    <button class="putProduct" type="button" data-id="[[id]]">Save fruit</button>
+</div>
+</form>
